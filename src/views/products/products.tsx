@@ -11,6 +11,16 @@ import { PRODUCTS_DATA } from "@/data/productsData";
 import { useRouter, useSearchParams } from "next/navigation";
 
 export const Products: React.FC = () => {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  // Return null or loading state on first render
+  if (!isMounted) {
+    return <div>Loading...</div>;
+  }
   const router = useRouter();
 
   const searchParams = useSearchParams();
