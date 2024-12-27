@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, Suspense } from "react";
 import { Product } from "@/types";
 import { ProductModal } from "@/views/products/productModal/productModal";
 import { BackToHome } from "@/components/backToHome/backToHome";
@@ -11,16 +11,6 @@ import { PRODUCTS_DATA } from "@/data/productsData";
 import { useRouter, useSearchParams } from "next/navigation";
 
 export const Products: React.FC = () => {
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  // Return null or loading state on first render
-  if (!isMounted) {
-    return <div>Loading...</div>;
-  }
   const router = useRouter();
 
   const searchParams = useSearchParams();
@@ -46,7 +36,7 @@ export const Products: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (searchParams) {
+    if (search) {
       PRODUCTS_DATA.find((product) => {
         if (product.id === search) {
           setSelectedProduct(product);
@@ -57,6 +47,7 @@ export const Products: React.FC = () => {
     }
   }, [search]);
   return (
+    // <Suspense fallback={<div>Loading...</div>}>
     <div>
       <BackToHome />
       <ProductList products={paginatedProducts} onOpenModal={handleOpenModal} />
@@ -70,5 +61,6 @@ export const Products: React.FC = () => {
         <ProductModal product={selectedProduct} onClose={handleCloseModal} />
       )}
     </div>
+    // </Suspense>
   );
 };
